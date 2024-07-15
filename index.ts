@@ -92,6 +92,7 @@ async function getDownloadInfo(dlData: DownloadStructure, useVer: string) {
   }
 
   const appendSeg = pkgs.length > 1;
+  if (appendSeg) ret += "\n";
 
   for (let i = 0; i < pkgs.length; i++) {
     if (appendSeg) {
