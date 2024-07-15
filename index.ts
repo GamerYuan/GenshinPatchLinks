@@ -41,7 +41,7 @@ async function getPreDl(jsonObj: JsonStructure) {
           preDlDiffs.push(getDownloadInfo(diff, preDl.major.version));
         }
         const preDlStr = await Promise.all(preDlDiffs);
-        console.log(preDlStr.join(""));
+        console.log(preDlStr.join("").trimEnd());
       }
     } else {
       console.log("No Pre-Download Version found!");
@@ -70,7 +70,7 @@ async function getRelease(jsonObj: JsonStructure) {
         );
       }
       const dlStr = await Promise.all(dlDiffs);
-      console.log(dlStr.join(""));
+      console.log(dlStr.join("").trimEnd());
     } else {
       console.log("No Release Version found!");
     }
@@ -92,6 +92,7 @@ async function getDownloadInfo(dlData: DownloadStructure, useVer: string) {
   }
 
   const appendSeg = pkgs.length > 1;
+  if (appendSeg) ret += "\n";
 
   for (let i = 0; i < pkgs.length; i++) {
     if (appendSeg) {
@@ -121,7 +122,7 @@ async function getDownloadInfo(dlData: DownloadStructure, useVer: string) {
       base: 2,
     })}, md5: ${voicePack.md5.toUpperCase()})\n`;
   }
-  return ret.trimEnd();
+  return ret;
 }
 
 var args = process.argv.slice(2);
