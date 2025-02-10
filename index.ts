@@ -86,9 +86,9 @@ async function getDownloadInfo(dlData: DownloadStructure, useVer: string) {
   const pkgs = dlData.game_pkgs;
 
   if (lastVer === useVer) {
-    ret += `Ver ${useVer} (Full):\nGame: `;
+    ret += `### Ver ${useVer} (Full):\n- Game: `;
   } else {
-    ret += `Ver ${useVer} (From ${lastVer}):\nGame Patch: `;
+    ret += `### Ver ${useVer} (From ${lastVer}):\n- Game Patch: `;
   }
 
   const appendSeg = pkgs.length > 1;
@@ -96,33 +96,39 @@ async function getDownloadInfo(dlData: DownloadStructure, useVer: string) {
 
   for (let i = 0; i < pkgs.length; i++) {
     if (appendSeg) {
-      ret += "\tSegment " + (i + 1) + ": ";
+      ret += "  - Segment " + (i + 1) + ": ";
     }
     ret += `${pkgs[i].url} (${filesize(Number(pkgs[i].size), {
       base: 2,
     })}, md5: ${pkgs[i].md5.toUpperCase()})\n`;
   }
 
+  let voArr = [];
+
   for (const voicePack of dlData.audio_pkgs) {
+    let voStr = "";
     switch (voicePack.language) {
       case "zh-cn":
-        ret += "CN_VO: ";
+        voStr += "- CN_VO: ";
         break;
       case "en-us":
-        ret += "EN_VO: ";
+        voStr += "- EN_VO: ";
         break;
       case "ja-jp":
-        ret += "JP_VO: ";
+        voStr += "- JP_VO: ";
         break;
       case "ko-kr":
-        ret += "KR_VO: ";
+        voStr += "- KR_VO: ";
         break;
     }
-    ret += `${voicePack.url} (${filesize(Number(voicePack.size), {
-      base: 2,
-    })}, md5: ${voicePack.md5.toUpperCase()})\n`;
+    voArr.push(
+      voStr +
+        `${voicePack.url} (${filesize(Number(voicePack.size), {
+          base: 2,
+        })}, md5: ${voicePack.md5.toUpperCase()})\n`
+    );
   }
-  return ret;
+  return ret + voArr.sort().join("");
 }
 
 var args = process.argv.slice(2);
